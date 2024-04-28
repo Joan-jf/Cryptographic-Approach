@@ -1,0 +1,90 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('cp.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; /* Prevent background image from repeating */
+    background-attachment: fixed; /* Ensure the background image stays fixed */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 400px;
+    margin: 50px auto; /* Adjusted margin to center the container vertically */
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+h2 {
+    color: #333333;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+form {
+    text-align: left; /* Align the form content to the left */
+}
+
+label {
+    font-weight: bold;
+    color: #555555;
+    display: block;
+    margin-bottom: 10px; /* Reduced margin for better spacing */
+}
+
+input[type="text"],
+input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+    font-size: 16px; /* Increased font size */
+    box-sizing: border-box; /* Adjusts the input width including padding and border */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px; /* Increased font size */
+    margin: 0 auto; /* Center the button horizontally */
+    display: block; /* Ensure the button is displayed as a block element */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    text-align: center;
+    margin-top: 50px; /* Increased margin-top value */
+    margin-bottom: 30px;
+}
+
+footer p {
+    color: #777777;
+    font-size: 15px;
+    margin-top: 1px; /* Adjusted margin-top value */
+}
+

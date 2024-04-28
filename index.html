@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCommerce Login/Signup</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Include CryptoJS library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    
+    <script>
+        // Hashing using SHA-256
+        function hashPassword(password) {
+            return CryptoJS.SHA256(password).toString();
+        }
+
+        // Encryption using AES
+        function encryptAES(data, encryptionKey) {
+            return CryptoJS.AES.encrypt(data, encryptionKey).toString();
+        }
+
+        // Encryption using Caesar Cipher
+        function caesarCipher(text, shift) {
+            var result = '';
+            for (var i = 0; i < text.length; i++) {
+                var charCode = text.charCodeAt(i);
+                if (charCode >= 97 && charCode <= 122) { // lowercase letters
+                    result += String.fromCharCode(((charCode - 97 + shift) % 26) + 97);
+                } else {
+                    result += text.charAt(i);
+                }
+            }
+            return result;
+        }
+
+        // Encryption using Vernam Cipher
+        function vernamCipher(text, key) {
+            var result = '';
+            for (var i = 0; i < text.length; i++) {
+                result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return result;
+        }
+
+        // Encryption using One-Time Pad Cipher
+        function oneTimePadCipher(text, key) {
+            var result = '';
+            for (var i = 0; i < text.length; i++) {
+                result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i));
+            }
+            return result;
+        }
+
+        // Encryption using Vigenère Cipher
+        function vigenereCipher(text, key) {
+            var result = '';
+            for (var i = 0, j = 0; i < text.length; i++) {
+                var charCode = text.charCodeAt(i);
+                if (charCode >= 97 && charCode <= 122) { // lowercase letters
+                    var shift = key.charCodeAt(j % key.length) - 97;
+                    result += String.fromCharCode(((charCode - 97 + shift) % 26) + 97);
+                    j++;
+                } else {
+                    result += text.charAt(i);
+                }
+            }
+            return result;
+        }
+
+        // Encryption using Playfair Cipher
+        function playfairCipher(text, key) {
+            // Create the key square
+            var keySquare = generateKeySquare(key);
+            // Prepare the text
+            text = prepareText(text);
+            // Generate digraphs
+            var digraphs = generateDigraphs(text);
+            var result = "";
+
+            for (var i = 0; i < digraphs.length; i++) {
+                var digraph = digraphs[i];
+                var row1 = Math.floor(keySquare.indexOf(digraph.charAt(0)) / 5);
+                var col1 = keySquare.indexOf(digraph.charAt(0)) % 5;
+                var row2 = Math.floor(keySquare.indexOf(digraph.charAt(1)) / 5);
+                var col2 = keySquare.indexOf(digraph.charAt(1)) % 5;
+
+                if (row1 == row2) {
+                    result += keySquare.charAt(row1 * 5 + (col1 + 1) % 5);
+                    result += keySquare.charAt(row2 * 5 + (col2 + 1) % 5);
+                } else if (col1 == col2) {
+                    result += keySquare.charAt(((row1 + 1) % 5) * 5 + col1);
+                    result += keySquare.charAt(((row2 + 1) % 5) * 5 + col2);
+                } else {
+                    result += keySquare.charAt(row1 * 5 + col2);
+                    result += keySquare.charAt(row2 * 5 + col1);
+                }
+            }
+
+            return result;
+        }
+
+        function generateKeySquare(key) {
+            var alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // Excluding 'J' (as per Playfair rules)
+            var keySquare = "";
+            var keyLength = key.length;
+
+            for (var i = 0; i < keyLength; i++) {
+                var char = key.charAt(i).toUpperCase();
+                if (keySquare.indexOf(char) == -1 && alphabet.indexOf(char) != -1) {
+                    keySquare += char;
+                }
+            }
+
+            for (var i = 0; i < alphabet.length; i++) {
+                var char = alphabet.charAt(i);
+                if (keySquare.indexOf(char) == -1) {
+                    keySquare += char;
+                }
+            }
+
+            return keySquare;
+        }
+
+        function prepareText(text) {
+            return text.replace(/[^a-zA-Z]/g, "").toUpperCase();
+        }
+
+        function generateDigraphs(text) {
+            var digraphs = [];
+            for (var i = 0; i < text.length; i += 2) {
+                var first = text.charAt(i);
+                var second = (i + 1 < text.length) ? text.charAt(i + 1) : 'X'; // Add 'X' if text length is odd
+                if (first == second) {
+                    second = 'X';
+                    i--; // Repeat this pair with the next character
+                }
+                digraphs.push(first + second);
+            }
+            return digraphs;
+        }
+
+        function encryptPasswordAndData() {
+            var enteredPassword = document.getElementById("password").value;
+            
+            // Check if the password field is empty
+            if (enteredPassword.trim() === "") {
+                alert("Please enter a password before encrypting.");
+                return; // Exit the function early if the password is empty
+            }
+
+            var hashedPassword = hashPassword(enteredPassword); // SHA-256 hash
+            var encryptionKey = "MyEncryptionKey"; // Example encryption key
+
+            var aesEncryptedPassword = encryptAES(enteredPassword, encryptionKey); // AES encryption
+            var caesarEncryptedPassword = caesarCipher(enteredPassword, 3); // Example Caesar shift
+            var vernamEncryptedPassword = vernamCipher(enteredPassword, "key"); // Example Vernam key
+            var oneTimePadEncryptedPassword = oneTimePadCipher(enteredPassword, "key"); // Example One-Time Pad key
+            var vigenereEncryptedPassword = vigenereCipher(enteredPassword, "key"); // Example Vigenère key
+            var playfairEncryptedPassword = playfairCipher(enteredPassword, "key"); // Playfair key
+            
+            alert("Hashed Password (SHA-256):\n" + hashedPassword + "\n\n" +
+                  "AES Encrypted Password:\n" + aesEncryptedPassword + "\n\n" +
+                  "Caesar Encrypted Password:\n" + caesarEncryptedPassword + "\n\n" +
+                  "Vernam Encrypted Password:\n" + vernamEncryptedPassword + "\n\n" +
+                  "One-Time Pad Encrypted Password:\n" + oneTimePadEncryptedPassword + "\n\n" +
+                  "Vigenère Encrypted Password:\n" + vigenereEncryptedPassword + "\n\n" +
+                  "Playfair Encrypted Password:\n" + playfairEncryptedPassword);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Cryptographic Approach</h1>
+        <h2>Login</h2>
+        <form>
+            <label for="username">Username:</label>
+            <input type="text" id="username" required><br><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" required><br><br>
+
+            <button type="button" onclick="encryptPasswordAndData()">Encrypt Password</button>
+        </form>
+    </div>
+    <footer>
+        <p>Secure Data in Application Development: A Cryptographic Approach</p>
+    </footer> 
+</body>
+</html>
